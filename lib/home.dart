@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:api_demo/Model/User.dart';
 import 'package:api_demo/Model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,15 +10,15 @@ import 'package:http/http.dart' as http;
 class Home extends StatelessWidget {
   Home({super.key});
 
-  List<Model> postList = [];
-  Future<List<Model>> getPostApi() async {
+  List<User> postList = [];
+  Future<List<User>> getPostApi() async {
     var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts"));
+        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"));
     if (response.statusCode == 200) {
       var data = json.decode(response.body.toString());
 
       for (Map<String, dynamic> i in data) {
-        postList.add(Model.fromJson(i));
+        postList.add(User.fromJson(i));
       }
       return postList;
     } else {
@@ -48,8 +49,16 @@ class Home extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(postList[index].userId.toString()),
-                                    Text(postList[index].title.toString())
+                                    Text(postList[index].name.toString()),
+                                    Text(postList[index]
+                                        .address!
+                                        .city
+                                        .toString()),
+                                    Text(postList[index]
+                                        .address!
+                                        .geo!
+                                        .lat
+                                        .toString())
                                   ]),
                             ),
                           );
