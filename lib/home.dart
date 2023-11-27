@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:api_demo/Model/User.dart';
-import 'package:api_demo/Model/model.dart';
+import 'package:api_demo/Model/product.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,17 +9,12 @@ import 'package:http/http.dart' as http;
 class Home extends StatelessWidget {
   Home({super.key});
 
-  List<User> postList = [];
-  Future<List<User>> getPostApi() async {
-    var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"));
+  Future<Product> getPostApi() async {
+    var response = await http.get(
+        Uri.parse("https://webhook.site/8b7ead6a-09f7-42d4-9185-c5df2bd34e36"));
     if (response.statusCode == 200) {
       var data = json.decode(response.body.toString());
-
-      for (Map<String, dynamic> i in data) {
-        postList.add(User.fromJson(i));
-      }
-      return postList;
+      return Product.fromJson(data);
     } else {
       throw Exception('Failed to load data');
     }
@@ -33,14 +27,14 @@ class Home extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: FutureBuilder(
+              child: FutureBuilder<Product>(
                 future: getPostApi(),
                 builder: ((context, snapshot) {
                   if (!snapshot.hasData) {
                     return Text("Loading...");
                   } else {
                     return ListView.builder(
-                        itemCount: postList.length,
+                        itemCount: snapshot.data!.data!.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -49,16 +43,15 @@ class Home extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(postList[index].name.toString()),
-                                    Text(postList[index]
-                                        .address!
-                                        .city
+                                    Text(snapshot.data!.data![index].title
                                         .toString()),
-                                    Text(postList[index]
-                                        .address!
-                                        .geo!
-                                        .lat
-                                        .toString())
+                                    Text(snapshot.data!.data![index].price
+                                        .toString()),
+                                    CircleAvatar(
+                                      foregroundImage: NetworkImage(snapshot
+                                          .data!.data![index].images![index].url
+                                          .toString()),
+                                    )
                                   ]),
                             ),
                           );
