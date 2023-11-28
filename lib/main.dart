@@ -1,5 +1,4 @@
-import 'package:api_demo/home.dart';
-import 'package:api_demo/login/login.dart';
+import 'package:api_demo/Upload_Image/upload_image.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: LoginPage(),
+      home: UploadImage(),
     );
   }
 }
