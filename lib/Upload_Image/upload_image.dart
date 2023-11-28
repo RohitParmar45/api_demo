@@ -32,7 +32,7 @@ class _UploadImageState extends State<UploadImage> {
     }
   }
 
-  Future<void> uploadImage() async {
+  Future<void> uploadImage(BuildContext context) async {
     setState(() {
       showSpinner = true;
     });
@@ -52,12 +52,13 @@ class _UploadImageState extends State<UploadImage> {
       setState(() {
         showSpinner = false;
       });
-      print('image uploaded ' + response.stream.toString());
+
+      showSnackBar(context, 'image uploaded ${response.stream}');
     } else {
       setState(() {
         showSpinner = false;
       });
-      print("failed " + response.statusCode.toString());
+      showSnackBar(context, "failed ${response.statusCode}");
     }
   }
 
@@ -94,18 +95,18 @@ class _UploadImageState extends State<UploadImage> {
                               )),
                             )),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 23,
                 ),
                 GestureDetector(
                   onTap: () {
-                    uploadImage();
+                    uploadImage(context);
                   },
                   child: Container(
                     width: 100,
                     height: 50,
                     color: Colors.green,
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Upload Image',
                       ),
@@ -119,8 +120,16 @@ class _UploadImageState extends State<UploadImage> {
       ),
     );
   }
-}
 
+  void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+}
 
 /**
  * Get Image 
